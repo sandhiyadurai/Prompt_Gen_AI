@@ -1,9 +1,8 @@
 import streamlit as st
-import openai
+
 import base64
 
 # === API KEY ===
-openai.api_key = "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"  # Replace with your key
 
 # === PAGE CONFIG ===
 st.set_page_config(
