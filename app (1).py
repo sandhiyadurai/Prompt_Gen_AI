@@ -50,7 +50,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # === OPTIONAL LOGO ===
-st.image("https://i.imgur.com/kHkk9Mn.png", use_container_width=True)
+st.image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOYYfY2VeRo5987cYYdjiykP6yXgazkvRl0XvKDeI1dXlKxRcWsMpG7QKO9NMbiAx7Y_A&usqp=CAU", use_container_width=True)
 
 # === TITLE ===
 st.title("✨ PromptCrafter")
