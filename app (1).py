@@ -3,7 +3,7 @@ import requests
 import base64
 
 # === YOUR OPENROUTER KEY ===
-api_key = "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"  # Replace with your actual key
+api_key = "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"  # Replace with your actual key
 
 # === PAGE CONFIG ===
 st.set_page_config(
