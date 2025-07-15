@@ -3,11 +3,19 @@ import requests
 import base64
 
 # Get the key safely
+# 1. Load key
 api_key = st.secrets.get("openrouter_key")
 
+# 2. Handle missing key
 if not api_key:
     st.error("🚫 API key not found! Please check your Streamlit Secrets.")
     st.stop()
+
+# 3. Use in your request
+headers = {
+    "Authorization": f"Bearer {api_key}",
+    "Content-Type": "application/json"
+}
 
 
 # === PAGE CONFIG ===
@@ -76,7 +84,7 @@ def generate_prompt(use_case, tone, details):
     full_prompt = f"Create a powerful prompt for:\nUse Case: {use_case}\nTone: {tone}\nDetails: {details}"
 
     headers = {
-        "Authorization": f"Bearer {st.secrets['openrouter_key']}",
+        "Authorization": f"Bearer {api_key}",  # ✅ FIXED
         "Content-Type": "application/json"
     }
 
@@ -89,11 +97,12 @@ def generate_prompt(use_case, tone, details):
 
     try:
         result = response.json()
-        return result['choices'][0]['message']['content']
+        return result.get("choices", [{}])[0].get("message", {}).get("content", "⚠️ No content generated.")
     except Exception as e:
         st.error("🚨 Oops! Something went wrong while generating the prompt.")
-        st.code(response.text)  # Show raw response for debugging
+        st.code(response.text)
         return None
+
 
 # === OUTPUT SECTION ===
 if st.button("🎯 Generate Prompt"):
