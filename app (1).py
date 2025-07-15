@@ -1,8 +1,6 @@
 import streamlit as st
-
+import requests
 import base64
-
-# === API KEY ===
 
 # === PAGE CONFIG ===
 st.set_page_config(
@@ -50,7 +48,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # === LOGO OR BANNER (OPTIONAL) ===
-st.image("https://i.imgur.com/kHkk9Mn.png", use_column_width=True)  # Replace with your logo/image URL
+st.image("https://i.imgur.com/kHkk9Mn.png", use_column_width=True)
 
 # === TITLE ===
 st.title("✨ PromptCrafter")
@@ -66,38 +64,40 @@ tone = st.selectbox("🎭 Tone",
 details = st.text_area("✍️ Describe what your prompt should help with")
 
 # === PROMPT GENERATOR FUNCTION ===
-
-import requests  # Make sure this is at the top if not already
-
 def generate_prompt(use_case, tone, details):
     full_prompt = f"Create a powerful prompt for:\nUse Case: {use_case}\nTone: {tone}\nDetails: {details}"
 
     headers = {
-        "Authorization": "Bearer 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",  # Replace this!
+        "Authorization": f"Bearer {st.secrets['openrouter_key']}",
         "Content-Type": "application/json"
     }
 
     data = {
-        "model": "openrouter/mistral-7b",  # Try GPT-4 later if needed
-        "messages": [
-            {"role": "user", "content": full_prompt}
-        ]
+        "model": "openrouter/mistral-7b",
+        "messages": [{"role": "user", "content": full_prompt}]
     }
 
     response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=data)
-    return response.json()['choices'][0]['message']['content']
 
+    try:
+        result = response.json()
+        return result['choices'][0]['message']['content']
+    except Exception as e:
+        st.error("🚨 Oops! Something went wrong while generating the prompt.")
+        st.code(response.text)  # Show raw response for debugging
+        return None
 
 # === OUTPUT SECTION ===
 if st.button("🎯 Generate Prompt"):
     if details:
         result = generate_prompt(use_case, tone, details)
-        st.markdown("#### 🪄 Generated Prompt:")
-        st.markdown(f'<div class="prompt-box">{result}</div>', unsafe_allow_html=True)
+        if result:
+            st.markdown("#### 🪄 Generated Prompt:")
+            st.markdown(f'<div class="prompt-box">{result}</div>', unsafe_allow_html=True)
 
-        # Save to file option
-        b64 = base64.b64encode(result.encode()).decode()
-        st.markdown(f'<a href="data:file/txt;base64,{b64}" download="prompt.txt">📥 Download this Prompt</a>', unsafe_allow_html=True)
+            # Save to file option
+            b64 = base64.b64encode(result.encode()).decode()
+            st.markdown(f'<a href="data:file/txt;base64,{b64}" download="prompt.txt">📥 Download this Prompt</a>', unsafe_allow_html=True)
     else:
         st.warning("Please describe your prompt first!")
 
@@ -108,3 +108,4 @@ st.markdown("""<hr style='margin-top:30px;'>
     <a href="https://github.com/yourusername" target="_blank">GitHub</a> | <a href="mailto:youremail@example.com">Email Me</a>
 </div>
 """, unsafe_allow_html=True)
+
