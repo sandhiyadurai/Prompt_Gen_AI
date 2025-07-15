@@ -2,6 +2,14 @@ import streamlit as st
 import requests
 import base64
 
+# Get the key safely
+api_key = st.secrets.get("openrouter_key")
+
+if not api_key:
+    st.error("🚫 API key not found! Please check your Streamlit Secrets.")
+    st.stop()
+
+
 # === PAGE CONFIG ===
 st.set_page_config(
     page_title="✨ PromptCrafter by Sandhiya",
@@ -98,8 +106,10 @@ if st.button("🎯 Generate Prompt"):
             # Save to file option
             b64 = base64.b64encode(result.encode()).decode()
             st.markdown(f'<a href="data:file/txt;base64,{b64}" download="prompt.txt">📥 Download this Prompt</a>', unsafe_allow_html=True)
+        
     else:
         st.warning("Please describe your prompt first!")
+        
 
 # === FOOTER ===
 st.markdown("""<hr style='margin-top:30px;'>
