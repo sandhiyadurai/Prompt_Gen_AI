@@ -2,21 +2,8 @@ import streamlit as st
 import requests
 import base64
 
-# Get the key safely
-# 1. Load key
-api_key = st.secrets.get("openrouter_key")
-
-# 2. Handle missing key
-if not api_key:
-    st.error("🚫 API key not found! Please check your Streamlit Secrets.")
-    st.stop()
-
-# 3. Use in your request
-headers = {
-    "Authorization": f"Bearer {api_key}",
-    "Content-Type": "application/json"
-}
-
+# === YOUR OPENROUTER KEY ===
+api_key = "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"  # Replace with your actual key
 
 # === PAGE CONFIG ===
 st.set_page_config(
@@ -25,11 +12,10 @@ st.set_page_config(
     layout="centered"
 )
 
-# === CUSTOM CSS with Google Fonts & Style ===
+# === CUSTOM CSS ===
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
-
     html, body, [class*="css"]  {
         font-family: 'Poppins', sans-serif;
         background: linear-gradient(135deg, #fdf6f0, #f0f8ff);
@@ -63,8 +49,8 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# === LOGO OR BANNER (OPTIONAL) ===
-st.image("https://i.imgur.com/kHkk9Mn.png", use_column_width=True)
+# === OPTIONAL LOGO ===
+st.image("https://i.imgur.com/kHkk9Mn.png", use_container_width=True)
 
 # === TITLE ===
 st.title("✨ PromptCrafter")
@@ -72,19 +58,17 @@ st.markdown("Unleash your imagination with AI-powered prompt generation 💫")
 
 # === INPUTS ===
 use_case = st.selectbox("🧠 Use Case", 
-                        ["Creative Writing", "Coding Help", "Study Aid", "Social Media", "Job Interview", "Midjourney Prompt"])
-
+    ["Creative Writing", "Coding Help", "Study Aid", "Social Media", "Job Interview", "Midjourney Prompt"])
 tone = st.selectbox("🎭 Tone", 
-                    ["Neutral", "Friendly", "Professional", "Funny", "Motivational"])
-
+    ["Neutral", "Friendly", "Professional", "Funny", "Motivational"])
 details = st.text_area("✍️ Describe what your prompt should help with")
 
-# === PROMPT GENERATOR FUNCTION ===
+# === FUNCTION ===
 def generate_prompt(use_case, tone, details):
     full_prompt = f"Create a powerful prompt for:\nUse Case: {use_case}\nTone: {tone}\nDetails: {details}"
 
     headers = {
-        "Authorization": f"Bearer {api_key}",  # ✅ FIXED
+        "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json"
     }
 
@@ -97,14 +81,13 @@ def generate_prompt(use_case, tone, details):
 
     try:
         result = response.json()
-        return result.get("choices", [{}])[0].get("message", {}).get("content", "⚠️ No content generated.")
+        return result['choices'][0]['message']['content']
     except Exception as e:
         st.error("🚨 Oops! Something went wrong while generating the prompt.")
         st.code(response.text)
         return None
 
-
-# === OUTPUT SECTION ===
+# === GENERATE BUTTON ===
 if st.button("🎯 Generate Prompt"):
     if details:
         result = generate_prompt(use_case, tone, details)
@@ -112,19 +95,17 @@ if st.button("🎯 Generate Prompt"):
             st.markdown("#### 🪄 Generated Prompt:")
             st.markdown(f'<div class="prompt-box">{result}</div>', unsafe_allow_html=True)
 
-            # Save to file option
             b64 = base64.b64encode(result.encode()).decode()
             st.markdown(f'<a href="data:file/txt;base64,{b64}" download="prompt.txt">📥 Download this Prompt</a>', unsafe_allow_html=True)
-        
     else:
         st.warning("Please describe your prompt first!")
-        
 
 # === FOOTER ===
 st.markdown("""<hr style='margin-top:30px;'>
 <div style='text-align:center;'>
     🧠 Made with ❤️ by <b>Sandhiya</b> | AI & DS Final Year Student ✨<br>
-    <a href="https://github.com/yourusername" target="_blank">GitHub</a> | <a href="mailto:youremail@example.com">Email Me</a>
+    <a href="https://github.com/yourusername" target="_blank">GitHub</a> | 
+    <a href="mailto:youremail@example.com">Email Me</a>
 </div>
 """, unsafe_allow_html=True)
 
