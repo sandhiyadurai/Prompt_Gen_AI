@@ -75,12 +75,16 @@ def generate_prompt(use_case, tone, details):
 
     headers = {
         "Authorization": f"Bearer {api_key}",
+        "HTTP-Referer": "https://promptgenai-gnuz2fhoyfb6bw6paghmhi.streamlit.app",
+        "X-Title": "PromptCrafter",
         "Content-Type": "application/json"
     }
 
     data = {
-        "model": "openrouter/mistral-7b",
-        "messages": [{"role": "user", "content": full_prompt}]
+        "model": "mistralai/mistral-7b-instruct",  # ✅ Valid model
+        "messages": [
+            {"role": "user", "content": full_prompt}
+        ]
     }
 
     response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=data)
