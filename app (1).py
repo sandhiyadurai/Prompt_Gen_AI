@@ -3,8 +3,12 @@ import requests
 import base64
 
 # === YOUR OPENROUTER KEY ===
-api_key = st.secrets.get("openrouter_key")
+api_key = st.secrets["openrouter_key"]
 
+headers = {
+    "Authorization": f"Bearer {api_key}",
+    "Content-Type": "application/json"
+}
 # === PAGE CONFIG ===
 st.set_page_config(
     page_title="✨ PromptCrafter by Sandhiya",
