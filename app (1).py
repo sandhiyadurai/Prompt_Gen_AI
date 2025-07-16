@@ -3,9 +3,9 @@ import requests
 import base64
 
 # === YOUR OPENROUTER KEY ===
-api_key = "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"  # Replace with your actual key
+api_key = "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"  # Replace with your actual key
 headers = {
-    "Authorization": "Bearer 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",  # Replace with your full key
+    "Authorization": "Bearer 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",  # Replace with your full key
     "Content-Type": "application/json"
 }
 
