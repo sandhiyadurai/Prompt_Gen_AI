@@ -3,11 +3,7 @@ import requests
 import base64
 
 # === YOUR OPENROUTER KEY ===
-api_key = "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"  # Replace with your actual key
-headers = {
-    "Authorization": "Bearer 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",  # Replace with your full key
-    "Content-Type": "application/json"
-}
+api_key = st.secrets.get("openrouter_key")
 
 # === PAGE CONFIG ===
 st.set_page_config(
