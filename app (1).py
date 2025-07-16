@@ -4,6 +4,8 @@ import base64
 
 # === YOUR OPENROUTER KEY ===
 api_key = st.secrets["openrouter_key"]
+st.write("API Key:", api_key)  # For debugging, remove later
+
 
 headers = {
     "Authorization": f"Bearer {api_key}",
